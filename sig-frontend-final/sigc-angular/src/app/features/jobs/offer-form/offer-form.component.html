@@ -1,0 +1,101 @@
+<div class="container py-4">
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading" class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      {{ isEditMode ? "Modifier l'offre d'emploi" : "Créer une nouvelle offre d'emploi" }}
+    </div>
+
+    <div class="card-body">
+      <form [formGroup]="offerForm" (ngSubmit)="onSubmit()">
+        
+        <!-- Affichage des erreurs -->
+        <div *ngIf="errorMessages.length" class="alert alert-danger">
+          <ul class="mb-0">
+            <li *ngFor="let msg of errorMessages">{{ msg.detail }}</li>
+          </ul>
+        </div>
+
+        <!-- Titre -->
+        <div class="mb-3">
+          <label for="title" class="form-label">Titre de l'offre</label>
+          <input type="text" id="title" class="form-control" formControlName="title">
+          <div *ngIf="f['title'].touched && f['title'].errors" class="form-text text-danger">
+            <div *ngIf="f['title'].errors?.['required']">Le titre est requis.</div>
+            <div *ngIf="f['title'].errors?.['maxlength']">Max 200 caractères.</div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea id="description" class="form-control" rows="6" formControlName="description"></textarea>
+          <div *ngIf="f['description'].touched && f['description'].errors?.['required']" class="form-text text-danger">
+            La description est requise.
+          </div>
+        </div>
+
+        <!-- Statut -->
+        <div class="mb-3">
+          <label for="status" class="form-label">Statut</label>
+          <select class="form-select" id="status" formControlName="status">
+            <option value="">-- Sélectionner un statut --</option>
+            <option *ngFor="let option of offerStatuses" [value]="option.value">{{ option.label }}</option>
+          </select>
+          <div *ngIf="f['status'].touched && f['status'].errors?.['required']" class="form-text text-danger">
+            Le statut est requis.
+          </div>
+        </div>
+
+        <!-- Salaire -->
+        <div class="mb-3">
+          <label for="salaryRange" class="form-label">Fourchette Salariale (optionnel)</label>
+          <input type="text" id="salaryRange" class="form-control" formControlName="salaryRange" placeholder="Ex: 45k€ - 55k€">
+          <div *ngIf="f['salaryRange'].touched && f['salaryRange'].errors?.['maxlength']" class="form-text text-danger">
+            Max 100 caractères.
+          </div>
+        </div>
+
+        <!-- Exigences -->
+        <div class="mb-3">
+          <label for="requirements" class="form-label">Exigences (séparées par des virgules)</label>
+          <input type="text" id="requirements" class="form-control" formControlName="requirements" placeholder="Ex: Angular, Docker, Scrum">
+        </div>
+
+        <!-- Compétences Requises -->
+        <div class="mb-3">
+          <label for="requiredSkillNames" class="form-label">Compétences Requises</label>
+          <select multiple class="form-select" id="requiredSkillNames" formControlName="requiredSkillNames">
+            <option *ngFor="let skill of availableSkills" [value]="skill.name">{{ skill.name }}</option>
+          </select>
+        </div>
+
+        <!-- Dates -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="publicationDate" class="form-label">Date de Publication</label>
+            <input type="date" id="publicationDate" class="form-control" formControlName="publicationDate">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="expirationDate" class="form-label">Date d'Expiration</label>
+            <input type="date" id="expirationDate" class="form-control" formControlName="expirationDate">
+          </div>
+        </div>
+
+        <!-- Boutons -->
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">Annuler</button>
+          <button type="submit" class="btn btn-primary" [disabled]="offerForm.invalid || isSubmitting">
+            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+            {{ isEditMode ? "Mettre à jour" : "Créer l'offre" }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

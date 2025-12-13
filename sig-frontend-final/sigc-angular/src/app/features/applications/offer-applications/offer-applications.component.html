@@ -1,0 +1,76 @@
+<!-- offer-applications.component.html -->
+<div class="page-container">
+    <p-card [header]="'Candidatures pour l\'offre ID: ' + offerId">
+       <p-table [value]="(applicationsResult$ | async)?.content|| []" [loading]="isLoading" responsiveLayout="scroll" styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+              <tr>
+                  <th style="min-width: 150px">Candidat</th>
+                  <th style="min-width: 150px">Date Candidature</th>
+                  <th style="min-width: 200px">Statut Actuel</th>
+                  <th style="min-width: 250px">Actions</th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-app>
+              <tr>
+                  <td>
+                     <!-- Ajouter lien vers profil candidat si possible -->
+                     {{ app.candidateFullName || ('Candidat ID: ' + app.candidateId) }}
+                  </td>
+                   <td>{{ app.applicationDate | date:'dd/MM/yyyy HH:mm' }}</td>
+                  <td>
+                      <!-- Dropdown pour changer le statut -->
+                       <p-dropdown
+                          [options]="availableStatuses"
+                          [ngModel]="app.status"
+                          (ngModelChange)="onStatusChange(app.id, $event)"
+                          optionLabel="label"
+                          optionValue="value"
+                          placeholder="Changer statut..."
+                          styleClass="w-full md:w-14rem"
+                          appendTo="body"> <!-- Important pour l'affichage correct dans une table -->
+                           <ng-template let-option pTemplate="item">
+                              <p-tag [value]="option.label" [severity]="getApplicationStatusSeverity(option.value)"></p-tag>
+                           </ng-template>
+                           <ng-template let-selectedOption pTemplate="selectedItem">
+                               <p-tag *ngIf="selectedOption" [value]="selectedOption.label" [severity]="getApplicationStatusSeverity(selectedOption.value)"></p-tag>
+                           </ng-template>
+                      </p-dropdown>
+                  </td>
+                  <td>
+                       <!-- Bouton Planifier Entretien (si pertinent) -->
+                       <p-button *ngIf="app.status === ApplicationStatus.UNDER_REVIEW || app.status === ApplicationStatus.RECEIVED"
+                          label="Planifier Entretien" icon="pi pi-calendar-plus" styleClass="p-button-sm p-button-info mr-2"
+                          (click)="scheduleInterview(app.id)"
+                          pTooltip="Planifier un entretien avec ce candidat"></p-button>
+  
+                        <!-- Bouton Voir Entretien (si déjà planifié/terminé) -->
+                        <p-button *ngIf="app.interviewIds && app.interviewIds.length > 0"
+                          label="Voir Entretien" icon="pi pi-comments" styleClass="p-button-sm p-button-secondary"
+                          [routerLink]="['/recruiter/interviews', app.interviewIds[0], 'details']"
+                          pTooltip="Voir les détails de l'entretien"></p-button>
+  
+                       <!-- Ajouter bouton pour voir CV/Profil si nécessaire -->
+                       <!-- <p-button label="Profil" icon="pi pi-user" styleClass="p-button-sm p-button-outlined" [routerLink]="['/profiles', app.candidateId]"></p-button> -->
+                  </td>
+              </tr>
+          </ng-template>
+           <ng-template pTemplate="emptymessage">
+              <tr><td colspan="4" class="text-center">Aucune candidature trouvée pour cette offre.</td></tr>
+           </ng-template>
+           <ng-template pTemplate="loadingbody">
+               <tr><td colspan="4" class="text-center"><p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8"></p-progressSpinner></td></tr>
+           </ng-template>
+           <ng-template pTemplate="footer">
+                <p-paginator
+                  (onPageChange)="onPageChange($event)"
+                  [first]="first"
+                  [rows]="rows"
+                  [totalRecords]="totalRecords"
+                  [rowsPerPageOptions]="[5, 10, 20]"
+                  [showCurrentPageReport]="true"
+                  currentPageReportTemplate="{first} à {last} sur {totalRecords} candidatures">
+                </p-paginator>
+         </ng-template>
+       </p-table>
+    </p-card>
+  </div>

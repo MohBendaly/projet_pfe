@@ -1,0 +1,67 @@
+ :host {
+        display: flex;
+        justify-content: center;
+        margin: 100px 0px;
+      }
+    
+      .mat-form-field {
+        width: 100%;
+        min-width: 100px;
+        font-size: 15px;
+      }
+      .mat-form-field-appearance-outline .mat-form-field-infix {
+        padding: 0.5em 0; /* Réduit l'espace interne vertical */
+        border-top: 0; /* Supprime l'espace supplémentaire */
+      }
+        
+      .mat-form-field-appearance-outline .mat-form-field-flex {
+         padding: 0 0.75em; /* Réduit le padding horizontal */
+        }
+
+      .mat-input-element {
+         height: 1.5em; /* Hauteur du texte réduite */
+        }
+      mat-card{
+        display: flex;
+        justify-content: center;
+        border-color: blue;
+        letter-spacing: normal;
+        background-color:aliceblue;
+      
+      }
+      mat-card-title{
+        display:flex;
+        justify-content: center;
+        color:blue;
+      }
+
+      mat-card-content {
+        display: flex;
+        justify-content: center;
+        width: 400px;
+        margin: 0 auto;
+      }
+      .mat-subtitle{
+       justify-content: right;
+       }
+      .error {
+        padding: 16px;
+        width: 300px;
+        color: white;
+        background-color: red;
+      }
+
+      .button {
+        display: flex;
+        justify-content: flex-end;
+      }
+      .forgot-password {
+        display: block;
+        text-align: left;
+        margin-left: auto; /* Pousse le lien vers la gauche */
+}
+      .w-100{
+      width: 200px;
+      line-height: normal;
+     }
+   

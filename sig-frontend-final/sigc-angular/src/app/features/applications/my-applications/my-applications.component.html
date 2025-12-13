@@ -1,0 +1,58 @@
+<!-- my-applications.component.html -->
+<div class="page-container">
+  <p-card header="Mes Candidatures">
+    <p-table [value]="(applications$ | async) || []" [loading]="isLoading" [responsive]="true" styleClass="p-datatable-gridlines p-datatable-sm">
+       <ng-template pTemplate="caption">
+          Liste de vos candidatures récentes.
+       </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 30%">Offre d'emploi</th>
+          <th style="width: 20%">Date Candidature</th>
+          <th style="width: 20%">Statut</th>
+          <th style="width: 30%">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-app>
+        <tr>
+          <td>
+             <a [routerLink]="['/offers', app.jobOfferId]">{{ app.jobOfferTitle || ('Offre ID: ' + app.jobOfferId) }}</a>
+          </td>
+          <td>{{ app.applicationDate | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <p-tag [value]="getApplicationStatusLabel(app.status)" [severity]="getApplicationStatusSeverity(app.status)"></p-tag>
+          </td>
+          <td>
+              <!-- Bouton Voir Entretien (si planifié ou en cours) -->
+              <p-button *ngIf="app.status === ApplicationStatus.INTERVIEW_SCHEDULED || app.status === ApplicationStatus.ACCEPTED"
+                        label="Entretien" icon="pi pi-comments" styleClass="p-button-info p-button-sm mr-2"
+                        [routerLink]="['/candidate/interviews', app.interviewIds?.[0], 'chat']"
+                        pTooltip="Accéder à l'entretien programmé"></p-button> <!-- Suppose le premier ID interview -->
+
+               <!-- Bouton Voir Détails Entretien (si terminé) -->
+              <p-button *ngIf="app.status === ApplicationStatus.INTERVIEW_COMPLETED || app.status === ApplicationStatus.ACCEPTED || app.status === ApplicationStatus.REJECTED"
+                        label="Résultat" icon="pi pi-eye" styleClass="p-button-secondary p-button-sm mr-2"
+                        [routerLink]="['/candidate/interviews', app.interviewIds?.[0], 'details']"
+                        pTooltip="Voir les détails de l'entretien terminé"></p-button>
+
+              <!-- Bouton Retirer Candidature (si statut le permet) -->
+              <p-button *ngIf="app.status !== ApplicationStatus.ACCEPTED && app.status !== ApplicationStatus.REJECTED && app.status !== ApplicationStatus.WITHDRAWN"
+                        label="Retirer" icon="pi pi-times-circle" styleClass="p-button-danger p-button-sm p-button-outlined"
+                        (click)="withdraw(app.id)"
+                        pTooltip="Retirer votre candidature"></p-button>
+          </td>
+        </tr>
+      </ng-template>
+       <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="4" class="text-center">Vous n'avez aucune candidature pour le moment.</td>
+            </tr>
+       </ng-template>
+        <ng-template pTemplate="loadingbody">
+             <tr>
+                 <td colspan="4" class="text-center"><p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8"></p-progressSpinner></td>
+            </tr>
+        </ng-template>
+    </p-table>
+  </p-card>
+</div>

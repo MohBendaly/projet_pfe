@@ -1,0 +1,81 @@
+<mat-card class="offer-card">
+  <!-- Loader -->
+  <ng-container *ngIf="isLoading">
+    <div class="skeleton-wrapper">
+      <p-skeleton width="60%" height="2rem" class="mb-2"></p-skeleton>
+      <p-skeleton width="100px" height="1.5rem" class="mb-3"></p-skeleton>
+      <p-skeleton width="200px" class="mb-3"></p-skeleton>
+      <p-skeleton height="1rem" class="mb-2"></p-skeleton>
+      <p-skeleton height="1rem" width="80%" class="mb-3"></p-skeleton>
+      <p-skeleton height="1rem" class="mb-2"></p-skeleton>
+      <p-skeleton height="1rem" width="70%" class="mb-3"></p-skeleton>
+      <p-skeleton height="4rem" width="100%" class="mb-3"></p-skeleton>
+      <div class="d-flex gap-2 mt-3">
+        <p-skeleton width="8rem" height="2.5rem"></p-skeleton>
+        <p-skeleton width="6rem" height="2.5rem"></p-skeleton>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Offre affichée -->
+  <ng-container *ngIf="(offer$ | async) as offer; else offerNotFound">
+    <mat-card-title class="d-flex justify-content-between align-items-center mb-2">
+      <span>{{ offer.title }}</span>
+      <p-tag [severity]="getSeverity(offer.status)"></p-tag>
+    </mat-card-title>
+
+    <mat-card-content>
+      <!-- Contenu principal ici -->
+      <!-- Exemples : description, entreprise, localisation... -->
+      <p>{{ offer.description }}</p>
+
+      <div class="mt-4 d-flex flex-wrap gap-2">
+        <button
+          mat-stroked-button
+          color="primary"
+          routerLink="/offers"
+          matTooltip="Revenir à la liste">
+          <mat-icon>arrow_back</mat-icon> Retour
+        </button>
+
+        <button
+          *ngIf="canApply"
+          mat-flat-button
+          color="accent"
+          (click)="applyForJob(offer.id)"
+          [disabled]="applyLoading"
+          matTooltip="Envoyer ma candidature">
+          <mat-icon>send</mat-icon> Postuler
+        </button>
+
+        <button
+          *ngIf="isRecruiterOrAdmin"
+          mat-flat-button
+          color="warn"
+          [routerLink]="['/recruiter/offers', offer.id, 'edit']"
+          matTooltip="Modifier cette offre">
+          <mat-icon>edit</mat-icon> Modifier
+        </button>
+
+        <button
+          *ngIf="isRecruiterOrAdmin"
+          mat-flat-button
+          color="primary"
+          [routerLink]="['/recruiter/offers', offer.id, 'applications']"
+          matTooltip="Voir les candidatures">
+          <mat-icon>group</mat-icon> Candidatures
+        </button>
+      </div>
+    </mat-card-content>
+  </ng-container>
+
+  <!-- Si l'offre n'est pas trouvée -->
+  <ng-template #offerNotFound>
+    <div class="text-center p-4">
+      <p>L'offre demandée n'a pas pu être chargée.</p>
+      <button mat-stroked-button color="primary" routerLink="/offers">
+        <mat-icon>arrow_back</mat-icon> Retour aux offres
+      </button>
+    </div>
+  </ng-template>
+</mat-card>

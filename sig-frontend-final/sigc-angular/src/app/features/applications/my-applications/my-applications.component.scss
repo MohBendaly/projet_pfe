@@ -1,0 +1,23 @@
+/* src/app/features/applications/my-applications/my-applications.component.scss */
+
+// Utiliser les styles globaux pour .card
+// Le style de p-table est mieux géré dans styles.scss global via ::ng-deep
+
+:host ::ng-deep {
+    // Cibler spécifiquement les boutons dans les actions du tableau
+    .p-datatable .p-datatable-tbody > tr > td:last-child .p-button {
+      margin-right: 0.5rem;
+      margin-bottom: 0.3rem; // Empêche les boutons de se coller si sur plusieurs lignes
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  
+    // Style des tags de statut (déjà géré par la sévérité, mais on peut affiner)
+    // .p-tag { }
+  }
+  
+  // Squelette pour le tableau
+  .table-skeleton td {
+     padding: 1rem 0.75rem !important; // Garder le même padding que les vraies cellules
+  }

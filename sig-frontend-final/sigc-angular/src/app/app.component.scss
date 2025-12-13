@@ -1,0 +1,26 @@
+/* src/app/app.component.scss */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; // Prend toute la hauteur
+}
+
+.main-content {
+  flex: 1; // Occupe l'espace restant entre header et footer
+  padding-top: 1rem;    // Espace sous le header
+  padding-bottom: 2rem; // Espace au-dessus du footer
+  // Le padding latéral est géré par .container/.container-fluid dans les pages
+}
+
+// Styles pour l'overlay de chargement global (si vous l'implémentez)
+.loading-overlay {
+  position: fixed;
+  inset: 0; // Raccourci pour top/right/bottom/left = 0
+  background-color: rgba(var(--bs-light-rgb), 0.6); // Fond clair semi-transparent Bootstrap
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1056; // Au-dessus des modales Bootstrap (z-index 1055)
+  backdrop-filter: blur(2px); // Effet de flou (support limité)
+}

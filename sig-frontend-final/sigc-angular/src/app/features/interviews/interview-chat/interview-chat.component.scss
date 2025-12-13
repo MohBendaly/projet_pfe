@@ -1,0 +1,188 @@
+/* src/app/features/interviews/interview-chat/interview-chat.component.scss */
+
+$bot-bg: var(--bs-tertiary-bg); // Fond très léger pour le bot
+$bot-text: var(--bs-body-color);
+$user-bg: var(--bs-primary); // Fond couleur primaire pour l'utilisateur
+$user-text: var(--bs-white); // Texte blanc sur fond primaire
+
+.chat-container { // Classe à ajouter autour de p-scrollPanel si besoin de padding
+     padding: 1rem;
+}
+
+:host ::ng-deep .chat-scroll-panel {
+    border: 1px solid var(--app-border-color);
+    border-radius: var(--app-border-radius);
+
+    .p-scrollpanel-wrapper {
+       border: none;// Enlever bordure interne si non désirée
+        // border-right: none; // Enlever bordure interne si non désirée
+    }
+    .p-scrollpanel-content {
+        height: 100%;
+        padding: 1.5rem; // Plus d'espace intérieur
+        display: flex; // Permet aux messages de prendre la hauteur nécessaire
+        flex-direction: column; // Messages les uns sous les autres
+        gap: 1rem; // Espace vertical entre les messages
+    }
+    .p-scrollpanel-bar-y { // Style de la barre de scroll
+        background-color: var(--bs-secondary-bg-subtle);
+        width: 8px;
+        opacity: 0.8;
+        border-radius: 4px;
+        &:hover {
+             background-color: #0d8bf2;
+             border-color: #0d8bf2;
+        }
+    }
+}
+/* Style spécifique pour le bouton Terminer */
+/* Style amélioré pour le bouton Terminer */
+:host ::ng-deep .p-button.p-button-danger {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #ff5252 0%, #d32f2f 100%);
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #ff3d3d 0%, #b71c1c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    background: #ffcdd2 !important;
+    color: #501cb7 !important;
+    cursor: not-allowed;
+  }
+
+  .pi-check-circle {
+    margin-right: 0.5rem;
+    font-size: 1.1rem;
+  }
+}
+
+.message-container {
+  display: flex;
+  align-items: flex-end; // Aligner avatar et bulle en bas
+  max-width: 85%; // Limiter largeur max des messages
+
+  &.user-message {
+    margin-left: auto; // Aligner à droite
+    flex-direction: row-reverse;
+
+    .message-content {
+      background-color: $user-bg;
+      color: $user-text;
+      border-radius: var(--app-border-radius-lg) 0 var(--app-border-radius-lg) var(--app-border-radius-lg); // Coins arrondis spécifiques
+      margin-right: 0.75rem;
+    }
+    .p-avatar { 
+        margin-right: 0.5rem;   
+    // Avatar de l'utilisateur}
+  }
+
+  &.bot-message {
+    margin-right: auto; // Aligner à gauche
+
+    .message-content {
+      background-color: $bot-bg;
+      color: $bot-text;
+      border: 1px solid var(--app-border-color); // Bordure légère pour le bot
+      border-radius: 0 var(--app-border-radius-lg) var(--app-border-radius-lg) var(--app-border-radius-lg);
+      margin-left: 0.75rem;
+    }
+    .p-avatar { // Avatar du bot
+        background-color: var(--app-secondary-light); // Fond gris clair
+        color: var(--app-secondary-dark); // Texte gris foncé
+        font-weight: 600; // Gras pour le nom du bot
+        font-size: 0.9rem; // Taille de police légèrement plus petite
+    }
+  }
+}
+
+.message-content {
+    padding: 0.75rem 1rem; // Padding interne de la bulle
+    box-shadow: var(--app-box-shadow-sm); // Légère ombre sur les bulles
+    word-wrap: break-word;
+    // Forcer la césure si nécessaire
+
+    p { margin: 0; } // Enlever marge par défaut des paragraphes dans la bulle
+
+    .message-timestamp {
+        display: block;
+        font-size: 0.75em;
+        margin-top: 0.3rem;
+        opacity: 0.6; // Timestamp discret
+         // Hérite de l'alignement user/bot
+    }
+}
+
+// Style de la zone de saisie
+:host ::ng-deep .p-inputgroup {
+  border-radius: var(--app-border-radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--app-border-color);
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus-within {
+    border-color: var(--app-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.2);
+  }
+  textarea {
+    border: none;
+    resize: none;
+    
+    &:focus {
+      outline: none;
+      box-shadow: none !important;
+    }
+  }
+ .p-button.p-button-info {
+    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+    border: none;
+    min-width: 100px;
+    transition: all 0.3s ease;
+
+    &:not(:disabled):hover {
+      background: linear-gradient(135deg, #1976D2 0%, #0d5cb6 100%);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      background: #a0c4f3;
+      cursor: not-allowed;
+      
+      &::after {
+        content: '';
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin-left: 8px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+    }
+
+    .pi-send {
+      margin-right: 0.5rem;
+    }
+  }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+}

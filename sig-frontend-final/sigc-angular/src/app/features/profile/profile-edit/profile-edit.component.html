@@ -1,0 +1,89 @@
+<div class="container my-4">
+  <!-- Spinner de chargement -->
+  <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center py-5">
+    <div class="spinner-border text-primary" role="status" aria-label="Chargement en cours">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <!-- Formulaire de profil -->
+  <div *ngIf="!isLoading && profileForm" class="card shadow rounded-3 p-4">
+    <h1 class="mb-4">Mon profil Candidat</h1>
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" novalidate>
+      <!-- Messages d'erreur globaux -->
+      <div *ngIf="errorMessages?.length" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <ul class="mb-0">
+          <li *ngFor="let msg of errorMessages">{{ msg }}</li>
+        </ul>
+        <button type="button" class="btn-close" aria-label="Close" (click)="errorMessages = []"></button>
+      </div>
+
+      <div class="row g-3">
+        <!-- Prénom -->
+        <div class="col-12 col-md-6">
+          <label for="firstName" class="form-label fw-semibold">Prénom <span class="text-danger">*</span></label>
+          <input id="firstName" type="text" class="form-control" formControlName="firstName"
+                 [class.is-invalid]="f['firstName'].touched && f['firstName'].invalid" aria-describedby="firstNameHelp" />
+          <div *ngIf="f['firstName'].touched && f['firstName'].errors?.['required']" class="invalid-feedback">
+            Ce champ est requis.
+          </div>
+        </div>
+
+        <!-- Nom -->
+        <div class="col-12 col-md-6">
+          <label for="lastName" class="form-label fw-semibold">Nom <span class="text-danger">*</span></label>
+          <input id="lastName" type="text" class="form-control" formControlName="lastName"
+                 [class.is-invalid]="f['lastName'].touched && f['lastName'].invalid" aria-describedby="lastNameHelp" />
+          <div *ngIf="f['lastName'].touched && f['lastName'].errors?.['required']" class="invalid-feedback">
+            Ce champ est requis.
+          </div>
+        </div>
+
+        <!-- Email (readonly) -->
+        <div class="col-12 col-md-6">
+          <label for="email" class="form-label fw-semibold">Email</label>
+          <input id="email" type="email" class="form-control" formControlName="email" readonly aria-describedby="emailHelp" />
+          <div id="emailHelp" class="form-text">L'email ne peut pas être modifié ici.</div>
+        </div>
+
+        <!-- Téléphone -->
+        <div class="col-12 col-md-6">
+          <label for="phone" class="form-label fw-semibold">Téléphone (optionnel)</label>
+          <input id="phone" type="tel" class="form-control" formControlName="phone"
+                 [class.is-invalid]="f['phone'].touched && f['phone'].errors?.['pattern']" aria-describedby="phoneHelp" />
+          <div *ngIf="f['phone'].touched && f['phone'].errors?.['pattern']" class="invalid-feedback">
+            Format de téléphone invalide.
+          </div>
+        </div>
+
+        <!-- Compétences -->
+        <div class="col-12 mt-3">
+          <label for="skillNames" class="form-label fw-semibold">Mes Compétences</label>
+          <select id="skillNames" class="form-select" formControlName="skillNames" multiple aria-describedby="skillNamesHelp" size="5">
+            <option *ngFor="let skill of availableSkills" [value]="skill.name">{{ skill.name }}</option>
+          </select>
+          <div id="skillNamesHelp" class="form-text">Maintenez la touche Ctrl (Cmd sur Mac) pour sélectionner plusieurs compétences.</div>
+        </div>
+      </div>
+
+      <!-- Boutons d'action -->
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
+          <i class="bi bi-x-circle me-1"></i> Annuler
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || isSubmitting">
+          <i class="bi bi-check-circle me-1"></i>
+          <span *ngIf="!isSubmitting">Enregistrer les modifications</span>
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <span *ngIf="isSubmitting" class="visually-hidden">Chargement...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Message si formulaire indisponible -->
+  <div *ngIf="!isLoading && !profileForm" class="alert alert-danger mt-4" role="alert">
+    Impossible de charger les données du profil. Veuillez réessayer plus tard.
+  </div>
+</div>

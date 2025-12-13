@@ -1,0 +1,177 @@
+<div class="container my-4">
+
+  <!-- Dialogue de confirmation de suppression (Bootstrap Modal) -->
+  <div class="modal fade" tabindex="-1" id="confirmDeleteModal" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-danger">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="confirmDeleteLabel">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmation
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
+          Êtes-vous sûr de vouloir supprimer le CV ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Non</button>
+          <button type="button" class="btn btn-danger" (click)="confirmDeleteResume()" data-bs-dismiss="modal">Oui</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chargement avec squelette personnalisé -->
+  <div *ngIf="isLoadingProfile" class="card mb-4 p-4" aria-busy="true" aria-live="polite" aria-label="Chargement du profil">
+    <div class="mb-3" style="width:150px; height:2rem; background:#e0e0e0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="mb-3" style="width:100%; height:1.5rem; background:#e0e0e0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
+        <div style="width:80%; height:1.5rem; background:#e0e0e0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="mb-3" style="width:100%; height:1.5rem; background:#e0e0e0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
+        <div style="width:60%; height:1.5rem; background:#e0e0e0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
+      </div>
+      <div class="col-12 mt-4">
+        <div class="mb-3" style="width:150px; height:1.5rem; background:#e0e0e0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
+        <div style="width:100%; height:4rem; background:#e0e0e0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
+      </div>
+      <div class="col-12 mt-4">
+        <div class="mb-3" style="width:150px; height:1.5rem; background:#e0e0e0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
+        <div style="width:200px; height:2.5rem; background:#e0e0e0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end mt-4">
+      <div style="width:10rem; height:2.5rem; background:#e0e0e0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
+    </div>
+  </div>
+
+  <!-- Profil affiché -->
+  <ng-container *ngIf="!isLoadingProfile && currentProfile">
+    <div class="card shadow-sm fade-in">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Mon Profil Candidat</h4>
+        <!-- Badge profil complet/incomplet à ajouter ici -->
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <!-- Prénom -->
+          <div class="col-12 col-md-6">
+            <label for="firstName" class="form-label fw-semibold">Prénom</label>
+            <p id="firstName" class="form-control-plaintext">{{ currentProfile.firstName || '-' }}</p>
+          </div>
+
+          <!-- Nom -->
+          <div class="col-12 col-md-6">
+            <label for="lastName" class="form-label fw-semibold">Nom</label>
+            <p id="lastName" class="form-control-plaintext">{{ currentProfile.lastName || '-' }}</p>
+          </div>
+
+          <!-- Email -->
+          <div class="col-12 col-md-6">
+            <label for="email" class="form-label fw-semibold">Email</label>
+            <p id="email" class="form-control-plaintext">{{ currentProfile.email }}</p>
+          </div>
+
+          <!-- Téléphone -->
+          <div class="col-12 col-md-6">
+            <label for="phone" class="form-label fw-semibold">Téléphone</label>
+            <p id="phone" class="form-control-plaintext">{{ currentProfile.phone || 'Non renseigné' }}</p>
+          </div>
+
+          <!-- Compétences -->
+          <div class="col-12">
+            <label class="form-label fw-semibold">Mes Compétences</label>
+            <div *ngIf="currentProfile.skillNames?.length; else noSkills" class="d-flex flex-wrap gap-2">
+              <span *ngFor="let skill of currentProfile.skillNames" class="badge bg-primary text-white py-2 px-3 fs-6">
+                <i class="bi bi-tag-fill me-1"></i>{{ skill }}
+              </span>
+            </div>
+            <ng-template #noSkills>
+              <p class="fst-italic text-muted">Aucune compétence ajoutée pour le moment.</p>
+            </ng-template>
+          </div>
+
+          <!-- Section CV -->
+          <div class="col-12 mt-4">
+            <label class="form-label fw-semibold">Curriculum Vitae (CV)</label>
+            <div class="d-flex align-items-center flex-wrap gap-2">
+              <ng-container *ngIf="resumeDownloadUrl; else noResume">
+                <a [href]="resumeDownloadUrl" target="_blank" class="btn btn-outline-secondary btn-sm" title="Ouvrir le CV dans un nouvel onglet" rel="noopener noreferrer" aria-label="Voir mon CV">
+                  Voir mon CV <i class="bi bi-box-arrow-up-right ms-1"></i>
+                </a>
+
+                <!-- Input fichier personnalisé pour remplacer -->
+                <label class="btn btn-warning btn-sm mb-0" for="cvFileInput" title="Remplacer le CV actuel" aria-label="Remplacer le CV">
+                  <i class="bi bi-upload"></i> Remplacer
+                </label>
+                <input type="file" id="cvFileInput" (change)="onUploadResume($event)" accept=".pdf,.doc,.docx,.odt" hidden [disabled]="isUploading || isDeleting" />
+
+                <button type="button" class="btn btn-outline-danger btn-sm" (click)="openDeleteModal()" [disabled]="isUploading" aria-label="Supprimer le CV actuel" title="Supprimer le CV actuel">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </ng-container>
+
+              <ng-template #noResume>
+                <span class="fst-italic text-muted me-2">Aucun CV téléversé.</span>
+                <label class="btn btn-success btn-sm mb-0" for="cvFileInput" title="Téléverser mon CV" aria-label="Téléverser mon CV">
+                  <i class="bi bi-upload"></i> Téléverser mon CV
+                </label>
+<input
+  type="file"
+  id="cvFileInput"
+  (change)="onUploadResume($event)"
+  accept=".pdf,.doc,.docx,.odt"
+  [disabled]="isUploading || isDeleting"
+  hidden
+/>
+              </ng-template>
+
+              <!-- Indicateur d'upload -->
+              <div *ngIf="isUploading" class="spinner-border text-primary ms-2" role="status" aria-label="Téléversement en cours">
+                <span class="visually-hidden">Téléversement en cours...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer text-end">
+        <a routerLink="/candidate/profile/edit" class="btn btn-primary" title="Mettre à jour mes informations ou compétences" aria-label="Modifier mon profil">
+          <i class="bi bi-pencil-square me-1"></i> Modifier mon profil
+        </a>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Erreur chargement profil -->
+  <div *ngIf="!isLoadingProfile && !currentProfile" class="alert alert-warning text-center mt-4 rounded">
+    <p class="mb-3">Impossible de charger les informations de votre profil.</p>
+    <button type="button" class="btn btn-outline-secondary" (click)="loadProfile()" aria-label="Réessayer le chargement du profil">
+      <i class="bi bi-arrow-repeat me-1"></i> Réessayer
+    </button>
+  </div>
+</div>
+
+<!-- Animation CSS pour le squelette -->
+<style>
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.fade-in {
+  animation: fadeIn 0.5s ease-in forwards;
+}
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+</style>

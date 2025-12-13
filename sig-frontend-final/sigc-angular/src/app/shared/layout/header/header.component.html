@@ -1,0 +1,56 @@
+<mat-toolbar color="primary" class="app-navbar">
+  <!-- Logo / Titre -->
+  <a mat-button routerLink="/" class="logo-container" aria-label="Accueil SIGC">
+    <mat-icon class="mat-icon-lg">business</mat-icon>
+    <span class="app-title ml-2">SIGC</span>
+  </a>
+
+  <!-- Remplir l'espace -->
+  <span class="flex-spacer"></span>
+
+  <!-- Liens publics toujours visibles -->
+  <a mat-button routerLink="/offers" routerLinkActive="active-link">Offres</a>
+
+  <!-- Boutons conditionnels selon la connexion -->
+  <ng-container *ngIf="!isLoggedIn">
+    <button mat-button color="accent" routerLink="/login">
+      <mat-icon>login</mat-icon>
+      Connexion
+    </button>
+    <button mat-raised-button color="accent" routerLink="/register">
+      <mat-icon>person_add</mat-icon>
+      Inscription
+    </button>
+  </ng-container>
+
+  <ng-container *ngIf="isLoggedIn">
+    <!-- Liens pour ROLE_CANDIDATE -->
+    <ng-container *ngIf="hasRole('ROLE_CANDIDATE')">
+      <a mat-button routerLink="/candidate/profile" routerLinkActive="active-link">Mon profil</a>
+      <a mat-button routerLink="/candidate/applications" routerLinkActive="active-link">Mes candidatures</a>
+    </ng-container>
+
+    <!-- Liens pour ROLE_RECRUITER ou ROLE_ADMIN -->
+    <ng-container *ngIf="hasRole('ROLE_RECRUITER') || hasRole('ROLE_ADMIN')">
+      <a mat-button routerLink="/recruiter/offers/new" routerLinkActive="active-link">Nouvelle offre</a>
+      <a mat-button routerLink="/recruiter/offers" routerLinkActive="active-link">Gestion offres</a>
+    </ng-container>
+
+    <!-- Liens pour ROLE_ADMIN uniquement -->
+    <ng-container *ngIf="hasRole('ROLE_ADMIN')">
+      <a mat-button routerLink="/admin/skills" routerLinkActive="active-link">Gestion compétences</a>
+    </ng-container>
+
+    <!-- Avatar et déconnexion -->
+    <div class="d-flex align-items-center ml-3">
+      <div class="user-avatar mat-elevation-z2">
+        {{ username ? username[0].toUpperCase() : '?' }}
+      </div>
+      <span class="username ml-2 mr-3 d-none d-md-inline">{{ username }}</span>
+      <button mat-button color="warn" (click)="logout()" matTooltip="Se déconnecter">
+        <mat-icon>logout</mat-icon>
+        Déconnexion
+      </button>
+    </div>
+  </ng-container>
+</mat-toolbar>

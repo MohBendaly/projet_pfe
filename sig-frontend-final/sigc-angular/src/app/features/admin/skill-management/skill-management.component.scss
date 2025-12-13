@@ -1,0 +1,59 @@
+/* src/app/features/admin/skill-management/skill-management.component.scss */
+
+// Utiliser les styles globaux pour .card, p-table (via ::ng-deep dans styles.scss)
+
+:host ::ng-deep {
+   // Style pour le dialogue p-dialog
+   .p-dialog {
+       .p-dialog-header {
+           background-color: var(--bs-light);
+           border-bottom-color: var(--bs-border-color);
+           font-weight: 600;
+           padding: 1rem 1.5rem;
+       }
+       .p-dialog-content {
+           padding: 1.5rem 1.5rem 0.5rem 1.5rem; // Ajuster padding
+       }
+        .p-dialog-footer {
+           border-top-color: var(--bs-border-color);
+           padding: 0.75rem 1.5rem;
+           background-color: var(--bs-light);
+        }
+        .p-dialog-footer .p-button.p-button-text { // Boutons Annuler/OK texte
+            color: var(--app-primary);
+            &:hover {
+                background-color: rgba(var(--bs-primary-rgb), 0.1);
+            }
+            &.p-button-danger { // Si bouton danger texte
+                color: var(--app-danger);
+                 &:hover {
+                   background-color: rgba(var(--bs-danger-rgb), 0.1);
+                }
+            }
+        }
+   }
+
+   // Style pour le champ d'erreur dans le dialogue
+   .p-dialog .p-error, .p-dialog .error-message { // Cibler les erreurs dans le dialogue
+        font-size: 0.8rem;
+        margin-top: 0.2rem;
+   }
+   .p-dialog .ng-invalid.ng-dirty:not(form) { // Style input invalide dans dialogue
+        border-color: var(--bs-danger) !important; // Forcer la couleur bordure rouge
+   }
+
+    // Squelette pour le tableau
+   .table-skeleton td { padding: 1rem 0.75rem !important; }
+}
+
+// Styles pour le formulaire dans le dialogue (hérités ou spécifiques)
+.field { // Si vous utilisez cette classe dans le dialogue
+  margin-bottom: 1.25rem;
+  label {
+    font-size: 0.85rem; // Augmenter la taille du label
+      font-weight: 600; // Mettre en gras
+      color: var(--bs-secondary-color); // Couleur secondaire
+      transition: color 0.2s ease-in-out; // Transition de la couleur du label
+      // Styles label (hérités normalement)
+  }
+}

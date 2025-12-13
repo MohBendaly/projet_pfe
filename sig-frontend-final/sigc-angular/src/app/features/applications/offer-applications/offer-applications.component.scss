@@ -1,0 +1,28 @@
+/* src/app/features/applications/offer-applications/offer-applications.component.scss */
+
+// Similaire à my-applications.scss
+// Styles globaux pour .card et p-table
+
+:host ::ng-deep {
+    // Assurer que le dropdown dans la cellule est cliquable et visible
+    .p-datatable .p-datatable-tbody > tr > td .p-dropdown {
+      min-width: 180px;
+    }
+    .p-datatable .p-datatable-tbody > tr > td:nth-child(4) .p-button { // Cibler 4e colonne (Actions)
+      margin-right: 0.5rem;
+      margin-bottom: 0.3rem;
+       &:last-child { margin-right: 0; }
+    }
+  
+    // Style des tags dans le dropdown sélectionné
+    .p-dropdown .p-dropdown-label .p-tag {
+       margin-top: -2px; // Ajuster alignement vertical si besoin
+       margin-bottom: -2px;
+    }
+  }
+  
+  .p-datatable .p-datatable-tbody > tr > td:nth-child(4) .p-button { // Cibler 4e colonne (Actions)
+    margin-right: 0.5rem;
+    margin-bottom: 0.3rem;
+     &:last-child { margin-right: 0; }
+  }

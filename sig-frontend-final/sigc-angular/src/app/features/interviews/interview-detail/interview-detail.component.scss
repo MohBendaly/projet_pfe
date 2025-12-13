@@ -1,0 +1,44 @@
+/* src/app/features/interviews/interview-detail/interview-detail.component.scss */
+
+// Utiliser les styles globaux pour .card, .formgrid, .field, h5, etc.
+
+// Style spécifique pour le bloc score
+.score-block {
+    background-color: var(--bs-primary-bg-subtle); // Fond très léger couleur primaire
+    border: 1px solid var(--bs-primary-border-subtle);
+    border-radius: var(--app-border-radius-lg);
+    padding: 1.5rem;
+    text-align: center;
+  }
+  
+  // Style pour p-rating
+  :host ::ng-deep .p-rating {
+      .p-rating-icon {
+          color: var(--app-warning); // Étoiles jaunes
+          font-size: 1.3rem; // Étoiles plus grandes
+          margin: 0 0.2rem;
+      }
+      &.p-readonly .p-rating-icon {
+          cursor: default;
+      }
+  }
+  
+  // Style pour le panel de feedback
+  :host ::ng-deep .p-panel {
+      .p-panel-header {
+          background-color: var(--bs-light); // Fond léger pour l'en-tête du panel
+          border-bottom-color: var(--bs-border-color);
+          font-weight: 600;
+          padding: 0.75rem 1.25rem;
+      }
+      .p-panel-content {
+          line-height: 1.7; // Feedback plus lisible
+          color: var(--bs-secondary-color);
+          padding: 1.25rem;
+      }
+  }
+  
+  // Style pour les squelettes de cette page
+  .skeleton-container { // Wrapper pour les squelettes si besoin
+     .p-skeleton { margin-bottom: 0.75rem; }
+  }

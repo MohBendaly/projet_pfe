@@ -1,0 +1,83 @@
+/* src/app/features/profile/profile-view/profile-view.component.scss */
+
+// Utiliser les styles globaux pour .card, .formgrid, .field, label, h5, p-chip/skill-tag, etc.
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.profile-card {
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px; // Classe ajoutée à p-card si besoin
+    // Styles spécifiques si la carte de profil doit être différente
+  }
+
+.profile-title{
+  span{
+
+   font-size: 1.5rem;    // Taille augmentée (équivalent à 24px)
+    font-weight: 600;     // Gras moyen
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    color: #0d47a1;
+}
+} 
+.profile-update{
+    color: blueviolet;
+  
+}
+  // Style pour la section CV
+  .cv-section {
+    background-color: var(--bs-light); // Fond léger pour cette section
+    border: 1px dashed var(--bs-border-color); // Bordure en pointillés
+    border-radius: var(--app-border-radius);
+    padding: 1.5rem;
+    margin-top: 1rem;
+
+  .field{
+     margin-bottom: 0.5rem;
+
+    }
+  
+    label { // Le titre "Curriculum Vitae (CV)"
+      margin-bottom: 0.5rem;
+      display: block; // Plus d'espace en dessous
+     }
+
+  }
+  .grid.formgrid {
+  gap: 0.5rem; // Réduit l'espace entre les colonnes
+}
+  
+  // Style pour les boutons d'action CV (alignement, espacement)
+  .cv-actions {
+     display: flex;
+     flex-wrap: wrap;
+     align-items: center;
+     gap: 0.57rem; // Espace entre les éléments
+  }
+  
+  // Style spécifique pour p-fileupload en mode basic
+  :host ::ng-deep {
+      .p-fileupload-basic { // Cibler le conteneur du bouton simple
+          display: inline-block; // Pour qu'il s'aligne avec les autres boutons
+      }
+      .p-button.p-fileupload-choose {
+        padding: 0.5rem 1rem; // Augmenter la marge pour
+        // rendre le bouton plus visuel
+        
+         // Appliquer les styles de bouton standard si besoin
+            
+        // Cibler le bouton "Choisir"
+         // Appliquer les styles de bouton standard si besoin
+         // @extend .btn; @extend .btn-success; @extend .btn-sm;
+      }
+       .grid.formgrid label {
+      font-weight: 600; /* Gras */
+      display: inline-block;
+      margin-bottom: 0.25rem;
+                          } 
+  }
+  
+  // Squelette pour la vue profil (similaire à offer-form)

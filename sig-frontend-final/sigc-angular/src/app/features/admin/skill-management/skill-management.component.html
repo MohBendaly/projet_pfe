@@ -1,0 +1,174 @@
+<div class="container-fluid py-3 bg-light rounded shadow-sm">
+  <p-toast></p-toast>
+
+  <!-- Carte principale -->
+  <p-card header="📋 Gestion des Compétences" styleClass="shadow-sm border-0 rounded bg-white">
+
+    <!-- Barre supérieure -->
+    <ng-template pTemplate="caption">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 p-2">
+        <button 
+          type="button" 
+          class="btn btn-success btn-sm"
+          data-bs-toggle="modal" 
+          data-bs-target="#skillModal"
+          (click)="prepareNewSkill()">
+          <i class="pi pi-plus me-1"></i> Nouvelle Compétence
+        </button>
+
+        <span class="p-input-icon-left w-100 w-md-auto">
+          <i class="pi pi-search"></i>
+          <input 
+            pInputText 
+            type="text" 
+            placeholder="🔍 Rechercher par nom ou catégorie..." 
+            class="form-control"
+            (input)="onGlobalFilter(skillsTable, $event)" 
+            id="globalFilterInput"/>
+        </span>
+      </div>
+    </ng-template>
+
+    <!-- Tableau -->
+    <p-table 
+      #skillsTable 
+      [value]="skills" 
+      [loading]="isLoading" 
+      dataKey="id"
+      [rows]="10" 
+      [paginator]="true" 
+      [globalFilterFields]="['name','category']"
+      paginatorPosition="bottom"
+      [rowsPerPageOptions]="[10, 25, 50]" 
+      responsiveLayout="scroll"
+      currentPageReportTemplate="{first} à {last} sur {totalRecords} compétences"
+      [showCurrentPageReport]="true" 
+      styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines bg-white rounded shadow-sm">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name" class="bg-light">Nom <p-sortIcon field="name" /></th>
+          <th pSortableColumn="category" class="bg-light">Catégorie <p-sortIcon field="category" /></th>
+          <th class="bg-light text-center">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-skill>
+        <tr>
+          <td>{{ skill.name }}</td>
+          <td>{{ skill.category || 'N/A' }}</td>
+          <td class="text-center">
+            <button 
+              class="btn btn-success btn-sm rounded-circle me-2"
+              data-bs-toggle="modal" 
+              data-bs-target="#skillModal" 
+              (click)="prepareEditSkill(skill)">
+              <i class="pi pi-pencil"></i>
+            </button>
+
+            <button 
+              class="btn btn-danger btn-sm rounded-circle"
+              data-bs-toggle="modal" 
+              data-bs-target="#deleteSkillModal" 
+              (click)="selectedSkillId = skill.id">
+              <i class="pi pi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="3" class="text-center text-muted py-3">Aucune compétence trouvée.</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="loadingbody">
+        <tr>
+          <td colspan="3" class="text-center">
+            <p-progressSpinner 
+              styleClass="w-3rem h-3rem text-primary"
+              strokeWidth="6">
+            </p-progressSpinner>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- MODALE AJOUT / MODIFICATION -->
+  <div class="modal fade" id="skillModal" tabindex="-1" aria-labelledby="skillModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-sm">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="skillModalLabel">
+            {{ isEditMode ? '✏️ Modifier Compétence' : '➕ Ajouter Compétence' }}
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- NOM -->
+          <div class="mb-3">
+            <label for="skillName" class="form-label">Nom <span class="text-danger">*</span></label>
+            <input 
+              type="text" 
+              id="skillName" 
+              class="form-control"
+              [(ngModel)]="skillForm.name"
+              [ngClass]="{'is-invalid': submitted && !skillForm.name?.trim()}"
+              autofocus required>
+            <div *ngIf="submitted && !skillForm.name?.trim()" class="invalid-feedback">
+              Le nom est obligatoire.
+            </div>
+          </div>
+
+          <!-- CATÉGORIE -->
+          <div class="mb-3">
+            <label for="skillCategory" class="form-label">Catégorie</label>
+            <input 
+              type="text" 
+              id="skillCategory" 
+              class="form-control"
+              [(ngModel)]="skillForm.category">
+          </div>
+        </div>
+
+        <div class="modal-footer d-flex justify-content-end">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+            Annuler
+          </button>
+          <button type="button" class="btn btn-primary btn-sm" (click)="saveSkill()" data-bs-dismiss="modal">
+            {{ isEditMode ? 'Mettre à jour' : 'Sauvegarder' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE SUPPRESSION -->
+  <div class="modal fade" id="deleteSkillModal" tabindex="-1" aria-labelledby="deleteSkillModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-sm">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="deleteSkillModalLabel">❌ Supprimer la compétence</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
+          Êtes-vous sûr de vouloir supprimer cette compétence ? Cette action est irréversible.
+        </div>
+        <div class="modal-footer d-flex justify-content-end">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
+          <button 
+            type="button" 
+            class="btn btn-danger btn-sm" 
+            [disabled]="selectedSkillId === null"
+            (click)="selectedSkillId !== null && deleteSkill(selectedSkillId)" 
+            data-bs-dismiss="modal">
+            Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

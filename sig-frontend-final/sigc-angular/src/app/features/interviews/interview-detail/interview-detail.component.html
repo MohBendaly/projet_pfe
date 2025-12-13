@@ -1,0 +1,103 @@
+<div class="page-container p-m-3">
+  <div *ngIf="isLoading" class="flex justify-content-center align-items-center py-6">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <ng-container *ngIf="(interview$ | async) as interview; ">
+    <p-card>
+      <ng-template pTemplate="title">
+        Détails de l'Entretien
+        <p-tag [value]="getInterviewStatusLabel(interview.status)" 
+               [severity]="getInterviewStatusSeverity(interview.status)" 
+               class="ml-3"></p-tag>
+      </ng-template>
+
+      <ng-template pTemplate="subtitle">
+        Pour la candidature ID: {{ interview.applicationId }}
+        <span *ngIf="interview.createdAt"> | Créé le: {{ interview.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+      </ng-template>
+
+      <ng-template pTemplate="content">
+        <div class="grid">
+          <div class="col-12 md:col-6">
+            <p><strong>Début :</strong> {{ interview.startTime | date:'dd/MM/yyyy HH:mm' }}</p>
+          </div>
+          <div class="col-12 md:col-6">
+            <p><strong>Fin :</strong> {{ interview.endTime | date:'dd/MM/yyyy HH:mm' }}</p>
+          </div>
+        </div>
+
+        <div *ngIf="interview.status === InterviewStatus.COMPLETED" class="mt-4">
+          <hr class="my-4 surface-border">
+          <h5>Évaluation de l'IA</h5>
+          <div class="grid align-items-center">
+            <div class="col-12 md:col-4">
+              <div class="text-center p-3 border-round bg-primary-reverse">
+                <div class="text-xl font-bold mb-2">Score Global</div>
+                <div class="text-3xl font-bold text-primary">
+                  {{ interview.aiEvaluationScore?.toFixed(1) ?? 'N/A' }} / 100
+                </div>
+                <p-rating [ngModel]="getRatingScore(interview.aiEvaluationScore)" 
+                          readonly="true" stars="5" class="mt-2"></p-rating>
+              </div>
+            </div>
+            <div *ngIf="interview.status === InterviewStatus.COMPLETED">
+  <h5>Feedback IA</h5>
+  <pre>{{ interview.aiFeedback }}</pre>
+</div>
+
+            <div class="col-12 md:col-8">
+              <p-panel header="Feedback Détaillé">
+                <p *ngIf="(interview.aiFeedback?.length ?? 0) > 0; else noFeedback" [innerHTML]="interview.aiFeedback "></p>
+                <ng-template #noFeedback>
+                  <p>Aucun feedback détaillé n'a été fourni.</p>
+                </ng-template>
+              </p-panel>
+            </div>
+          </div>
+        </div>
+<div class="text-3xl font-bold text-primary">
+ <p><strong>Score:</strong></p>  {{ interview.aiEvaluationScore }}
+</div>
+<p *ngIf="interview.aiFeedback !== undefined && interview.aiFeedback !== null && interview.aiFeedback !== ''">
+  {{ interview.aiFeedback }}
+  
+</p>
+<ng-template #noFeedback>
+  <p>Aucun feedback détaillé n'a été fourni.</p>
+</ng-template>
+        <div class="mt-4">
+<div class="mt-4">
+  <h5>Messages échangés</h5>
+  <p class="text-muted mb-3">Consultez l'historique complet de la conversation de cet entretien.</p>
+  <p-button 
+    label="Voir l'historique des messages" 
+    icon="pi pi-comments" 
+    styleClass="p-button-outlined p-button-info" 
+    [routerLink]="['/admin/interviews', interview.id, 'history']">
+  </p-button>
+</div>
+        <div *ngIf="interview.status === InterviewStatus.CANCELLED" 
+             class="mt-4 text-center text-red-500 font-bold">
+          Cet entretien a été annulé.
+        </div>
+
+        <!-- DEBUG : Affiche l'objet complet pour vérifier les données -->
+        <!-- <pre>{{ interview | json }}</pre> -->
+      
+
+      <ng-template pTemplate="footer">
+        <div class="flex justify-content-between">
+          <p-button label="Retour" icon="pi pi-arrow-left" styleClass="p-button-secondary" (click)="goBack()"></p-button>
+          <p-button *ngIf="userRole === 'CANDIDATE' && (interview.status === InterviewStatus.SCHEDULED || interview.status === InterviewStatus.IN_PROGRESS)"
+                    label="Aller au Chat" icon="pi pi-comments" styleClass="p-button-info"
+                    [routerLink]="['/candidate/interviews', interview.id, 'chat']"></p-button>
+        </div>
+      </ng-template>
+    
+
+
+  <ng-template #notFound>
+    <p *ngIf="!isLoading">Impossible de charger les détails de l'entretien.</p>
+  </ng-template>
+</div>

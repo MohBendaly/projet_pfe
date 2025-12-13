@@ -1,0 +1,11 @@
+/* src/app/shared/layout/footer/footer.component.scss */
+.footer-container {
+    // Utilise les variables CSS de PrimeNG pour la cohérence
+    background-color: var(--surface-section); // Fond légèrement différent
+    border-top: 1px solid var(--surface-border); // Ligne de séparation
+    color: var(--text-color-secondary); // Couleur de texte secondaire
+    padding: 1.5rem 1rem; // Espacement intérieur
+    margin-top: auto; // Pousse le footer en bas si le contenu est court
+    text-align: center;
+    font-size: 0.9em; // Taille de police légèrement réduite
+  }

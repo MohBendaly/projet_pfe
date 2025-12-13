@@ -1,0 +1,121 @@
+/* src/app/features/jobs/offer-list/offer-list.component.scss */
+@use 'sass:color';
+
+:host { display: block; }
+
+.offer-header{
+  background-color:var(--primary-color);
+  padding: 0.5em;;
+  --header-black:black;
+  background-color: var(--header-black);
+  
+}
+ .white-text {
+  color: white !important;
+  font-weight: 200;
+  font-size: medium;
+  /* Désactive tous les effets de surbrillance */
+  &:hover, &:focus {
+    color: white !important;
+    background-color: transparent !important;
+    border-color: transparent !important;
+  }
+}
+.card { // Style de la carte principale contenant la liste/toolbar
+  padding: 0; // Enlever le padding par défaut si p-toolbar/p-dataview sont à l'intérieur
+  box-shadow: var(--bs-box-shadow); // Ombre plus prononcée pour la carte principale
+}
+
+// Styles pour la barre d'outils
+.p-toolbar { // Cibler directement si pas ::ng-deep
+    border-radius: var(--bs-border-radius-lg) var(--bs-border-radius-lg) 0 0; // Arrondir coins hauts
+    border: none;
+    border-bottom: 1px solid var(--bs-border-color); // Séparateur
+    background-color: var(--bs-tertiary-bg); // Fond très léger
+    padding: 0.75rem 1.5rem;
+}
+
+// Ajustement pour l'input de recherche
+.p-input-icon-left > .p-inputtext { // Cibler pInputText via sa classe générée
+    border-radius: var(--bs-border-radius);
+    font-size: 0.9rem;
+}
+
+// Style pour chaque élément de la liste
+.offer-list-item > div { // Cible le div flex interne
+  border-bottom: 1px solid var(--bs-border-color-translucent); // Bordure légère
+  transition: background-color 0.15s ease-in-out;
+  background-color: var(--bs-body-bg); // Fond blanc par défaut
+
+  &:hover {
+    background-color: rgba(var(--bs-primary-rgb), 0.05); // Fond léger au survol
+    border-color: rgba(var(--bs-primary-rgb), 0.1); // Bordure plus marquée au survol
+  }
+
+  &:last-child {
+    border-bottom: none;
+    // Arrondir les coins bas du dernier élément
+    border-bottom-left-radius: var(--bs-border-radius-lg);
+    border-bottom-right-radius: var(--bs-border-radius-lg);
+  }
+}
+
+// Style pour les tags de compétence (comme avant)
+.skill-tag {
+  display: inline-block;
+  background-color: var(--app-secondary-light); // Fond gris clair
+  color: var(--app-secondary-dark); // Texte gris foncé
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--bs-border-radius-pill); // Forme pilule
+  font-size: 0.75em;
+  font-weight: 500;
+  margin: 0.1rem 0.2rem 0.1rem 0;
+  white-space: nowrap;
+}
+
+// Troncature de la description (comme avant)
+.description-truncate {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5; // Ajuster pour lisibilité
+    max-height: calc(1.5em * 2); // 2 * line-height
+}
+.description-truncate-grid {
+    // ... (styles précédents pour grille) ...
+     -webkit-line-clamp: 3;
+     line-clamp: 3;
+     max-height: calc(1.4em * 3);
+}
+
+
+// Squelette (styles globaux ou ici)
+.list-skeleton .p-skeleton, .grid-skeleton .p-skeleton { margin-bottom: 0.75rem; }
+:host ::ng-deep .p-skeleton { // ::ng-deep si styles globaux ne suffisent pas
+   background-color: var(--app-secondary-light) !important;
+   &::after { background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0)) !important; }
+}
+
+// Paginator (styles globaux ou ici)
+:host ::ng-deep .p-paginator {
+     border-top: 1px solid var(--bs-border-color);
+     border-radius: 0 0 var(--bs-border-radius-lg) var(--bs-border-radius-lg);
+     padding: 0.75rem 1rem;
+     background-color: var(--bs-tertiary-bg); // Fond léger
+
+     .p-paginator-element:not(.p-disabled):not(.p-highlight):hover {
+          background: rgba(var(--bs-primary-rgb), 0.1); // Effet survol sur numéros page
+          border-color: transparent;
+     }
+}
+
+// Message vide
+:host ::ng-deep .p-dataview-emptymessage > div { // Cibler le contenu interne
+    color: var(--bs-secondary-color);
+    // background-color: var(--bs-tertiary-bg); // Optionnel: fond léger
+    border-radius: var(--bs-border-radius);
+    padding: 2rem;
+}

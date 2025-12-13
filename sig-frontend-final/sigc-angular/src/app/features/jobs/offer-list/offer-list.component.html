@@ -1,0 +1,117 @@
+<div class="container py-4">
+  <div class="card shadow rounded">
+
+    <!-- Barre d'outils -->
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+      <div class="d-flex gap-2">
+        <button *ngIf="isRecruiterOrAdmin" class="btn btn-success btn-sm" routerLink="/recruiter/offers/new" title="Publier une nouvelle offre">
+          <i class="bi bi-plus-circle"></i> Créer
+        </button>
+        <button class="btn btn-outline-secondary btn-sm" (click)="refreshList()" [disabled]="isLoading" title="Rafraîchir">
+          <i class="bi bi-arrow-repeat"></i> Actualiser
+        </button>
+      </div>
+      <div class="input-group input-group-sm w-auto">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input type="search" class="form-control" placeholder="Rechercher..." [(ngModel)]="searchKeyword" (input)="onSearchInput($event)" aria-label="Rechercher">
+      </div>
+    </div>
+
+    <!-- Erreur de chargement -->
+    <div *ngIf="errorLoading && !isLoading" class="card-body text-center">
+      <i class="bi bi-exclamation-triangle display-4 text-warning"></i>
+      <h5 class="text-muted">Erreur de chargement</h5>
+      <p>Impossible de récupérer les offres pour le moment.</p>
+      <button class="btn btn-secondary" (click)="refreshList()">
+        <i class="bi bi-arrow-repeat"></i> Réessayer
+      </button>
+    </div>
+
+    <!-- Squelette de chargement -->
+    <div *ngIf="isLoading" class="card-body">
+      <div class="row g-3">
+        <div class="col-12" *ngFor="let item of [1,2,3]">
+          <div class="placeholder-glow p-3 border rounded">
+            <span class="placeholder col-4"></span>
+            <span class="placeholder col-6"></span>
+            <div class="my-2">
+              <span class="placeholder col-12"></span>
+              <span class="placeholder col-10"></span>
+            </div>
+            <span class="placeholder col-3"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liste des offres -->
+    <div *ngIf="!isLoading && !errorLoading" class="card-body">
+      <div *ngIf="offers.length > 0; else noOffersFound">
+        <div *ngFor="let offer of offers; trackBy: trackByOfferId" class="mb-4 border-bottom pb-3">
+          <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+            <!-- Infos -->
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <a [routerLink]="['/offers', offer.id]" class="h5 text-primary text-decoration-none">
+                  {{ offer.title || 'Titre Indisponible' }}
+                </a>
+                <span class="badge bg-{{ getSeverity(offer.status) }}">{{ getStatusLabel(offer.status) }}</span>
+              </div>
+              <p *ngIf="offer.description" class="text-muted small mb-2" [title]="offer.description">
+                {{ offer.description | slice:0:180 }}{{ offer.description.length > 180 ? '...' : '' }}
+              </p>
+              <p *ngIf="!offer.description" class="fst-italic text-muted small">(Pas de description)</p>
+              <div class="d-flex flex-wrap gap-2 align-items-center small">
+                <div *ngIf="(offer.requiredSkillNames?.length ?? 0) > 0" [attr.title]="(offer.requiredSkillNames?.length ?? 0) > 0 ? offer.requiredSkillNames?.join(', ') : ''">
+                  <i class="bi bi-tags text-primary"></i>
+                  <span *ngFor="let skill of (offer.requiredSkillNames || []) | slice:0:3" class="badge bg-light text-dark border me-1">{{ skill }}</span>
+                  <span *ngIf="(offer.requiredSkillNames?.length ?? 0) > 3" class="fw-bold">+{{ (offer.requiredSkillNames?.length ?? 0) - 3 }}</span>
+                </div>
+                <div class="text-muted ms-auto">
+                  <i class="bi bi-calendar"></i> Publiée le: {{ (offer.publicationDate ?? offer.createdAt) | date:'dd/MM/yyyy' }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="d-flex flex-column gap-2">
+              <a *ngIf="offer.id" [routerLink]="['/offers', offer.id]" class="btn btn-sm btn-outline-primary w-100">
+                <i class="bi bi-info-circle"></i> Détails
+              </a>
+              <a *ngIf="isRecruiterOrAdmin && offer.id" [routerLink]="['/recruiter/offers', offer.id, 'edit']" class="btn btn-sm btn-outline-secondary w-100">
+                <i class="bi bi-pencil"></i> Gérer
+              </a>
+              <a *ngIf="isRecruiterOrAdmin && offer.id" [routerLink]="['/recruiter/offers', offer.id, 'applications']" class="btn btn-sm btn-outline-secondary w-100">
+                <i class="bi bi-people"></i> Candidatures
+              </a>
+              <a *ngIf="authService.hasRole('ROLE_CANDIDATE') && offer.status === 'PUBLISHED' && offer.id" [routerLink]="['/offers', offer.id]" fragment="apply" class="btn btn-sm btn-success w-100">
+                <i class="bi bi-send"></i> Postuler
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aucune offre -->
+      <ng-template #noOffersFound>
+        <div class="text-center p-5">
+          <i class="bi bi-inbox display-4 text-muted"></i>
+          <h5 class="text-muted">Aucune offre trouvée</h5>
+          <p class="text-secondary">Il n'y a pas d'offre disponible pour le moment ou correspondant à votre recherche.</p>
+        </div>
+      </ng-template>
+
+ <!-- Paginator Externe -->
+          <p-paginator *ngIf="totalRecords > 0"
+            (onPageChange)="onPageChange($event)"
+            [first]="first"
+            [rows]="rows"
+            [totalRecords]="totalRecords"
+            [rowsPerPageOptions]="[6, 12, 18]"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} offres"
+            styleClass="border-top-1 surface-border mt-4"> <!-- Style pour le séparer -->
+          </p-paginator>
+
+  </div>
+</div>
