@@ -1,0 +1,11 @@
+static_sites:
+  - name: angular-frontend
+    buildCommand: npm run build --prod
+    publish: dist/projet_pfe
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://spring-pfe-ugzh.onrender.com/api/*
+      - type: rewrite
+        source: /*
+        destination: /index.html
