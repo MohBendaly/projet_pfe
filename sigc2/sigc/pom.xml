@@ -117,6 +117,7 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+					 <mainClass>com.mohamedbendali.SigcApplication</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
