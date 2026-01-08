@@ -3,5 +3,5 @@ import { commonEnv } from './environment.common';
 
 export const environment = {
   production: true,
-  apiUrl: 'https://votre-api-production.com/api' // URL de production
+  backendUrl: 'https://spring-pfe-ugzh.onrender.com'
 };
