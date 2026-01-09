@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod",
+    "prebuild": "node create-env.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:sigc-frontend": "node dist/sigc-frontend/server/server.mjs"
