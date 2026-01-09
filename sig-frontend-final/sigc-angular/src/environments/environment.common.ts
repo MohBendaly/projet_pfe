@@ -1,5 +1,6 @@
 // environment.common.ts
 export const commonEnv = {
   appName: 'Mon Application',
-  defaultLanguage: 'fr'
+  defaultLanguage: 'fr',
+   version: '1.0.0'
 };
