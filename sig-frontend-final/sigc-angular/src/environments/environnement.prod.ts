@@ -1,3 +1,4 @@
+import { commonEnv } from './environment.common';
 // src/environments/environment.prod.ts
 export const environment = {
   production: true,
