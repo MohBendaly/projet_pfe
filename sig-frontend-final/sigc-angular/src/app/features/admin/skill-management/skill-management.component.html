@@ -116,7 +116,7 @@
               id="skillName" 
               class="form-control"
               [(ngModel)]="skillForm.name"
-              [ngClass]="{'is-invalid': submitted && !skillForm.name?.trim()}"
+              [ngClass]="{'is-invalid': submitted && !skillForm.name.trim()}"
               autofocus required>
             <div *ngIf="submitted && !skillForm.name?.trim()" class="invalid-feedback">
               Le nom est obligatoire.
