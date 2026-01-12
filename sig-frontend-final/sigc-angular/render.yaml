@@ -1,17 +1,76 @@
+version: "1"
+
+services:
+  # 1. SERVICE SPRING BOOT (Backend API)
+  - type: web
+    name: spring-pfe
+    env: java
+    region: frankfurt  # ou ohio, oregon, etc.
+    
+    # Commande de build
+    buildCommand: ./mvnw clean package -DskipTests  # ou ./gradlew build
+    
+    # Commande de démarrage
+    startCommand: java -jar target/*.jar  # ou build/libs/*.jar
+    
+    # Health check (OBLIGATOIRE pour Render)
+    healthCheckPath: /health
+    
+    # Délai initial pour laisser PostgreSQL démarrer
+    initialDelay: 180
+    
+    # Variables d'environnement
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: JAVA_OPTS
+        value: -Xmx512m -Xms256m -Dserver.port=$PORT
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: postgresql-rendement
+          property: connectionString
+      # Render injecte automatiquement les autres (username, password)
+    
+    # Plan
+    plan: free
+    
+    # Auto-scaling (gratuit = 1 instance)
+    numInstances: 1
+  
+  # 2. SERVICE POSTGRESQL
+  - type: postgres
+    name: postgresql-rendement
+    plan: free
+    region: frankfurt  # Même région que Spring Boot
+    ipAllowList: []  # [] signifie "allow all"
+    
+    # Nom de la base de données
+    databaseName: recruitment_db
+    
+    # Utilisateur
+    user: spring_user
+    
+    # Extensions PostgreSQL optionnelles
+    # extensions:
+    #   - uuid-ossp
+    #   - pgcrypto
+
+# 3. SITE STATIC (Angular Frontend)
 static_sites:
   - name: angular-frontend
-    buildCommand: npm run build --prod
+    buildCommand: npm ci && npm run build --prod
     publish: dist/projet_pfe
     routes:
       - type: rewrite
         source: /api/*
-        destination: https://spring-pfe-ugzh.onrender.com/api/*
+        destination: https://spring-pfe.onrender.com/api/*
       - type: rewrite
         source: /*
         destination: /index.html
-      - type: postgres
-          name: postgresql-rendement
-          plan: free
-          ipAllowList: []  # Laisser vide pour permettre toutes les connexions
-          databaseName: recruitment_db
-          user: spring_user
+    envVars:
+      - key: NODE_VERSION
+        value: 18.17.0
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=3600
