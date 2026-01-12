@@ -1,0 +1,15 @@
+# CORS Configuration pour Render
+cors:
+  allowed-origins:
+    - https://angular-frontend.onrender.com
+    - http://localhost:4200  # Pour le développement local
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+  allowed-headers:
+    - "*"
+  allow-credentials: true
+  max-age: 3600
