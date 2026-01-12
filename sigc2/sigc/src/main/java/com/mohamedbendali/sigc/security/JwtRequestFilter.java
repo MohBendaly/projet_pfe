@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter; // Important: pour s'exécuter une seule fois par requête
-
 import java.io.IOException;
 
 @Component // Déclare comme bean Spring pour être injecté dans SecurityConfig
@@ -99,5 +98,17 @@ public class JwtRequestFilter extends OncePerRequestFilter { // Hérite de OnceP
 
         // Toujours appeler doFilter pour passer au filtre suivant
         chain.doFilter(request, response);
+    }
+    
+    private boolean shouldSkipFilter(String requestURI) {
+        return requestURI.startsWith("/api/auth/") ||
+               requestURI.startsWith("/swagger-ui") ||
+               requestURI.startsWith("/v3/api-docs") ||
+               requestURI.startsWith("/h2-console") ||
+               requestURI.startsWith("/error") ||
+               requestURI.startsWith("/actuator") ||
+               requestURI.equals("/") ||
+               requestURI.equals("/favicon.ico") ||
+               requestURI.startsWith("/config/"); // Pour le test de connexion
     }
 }
