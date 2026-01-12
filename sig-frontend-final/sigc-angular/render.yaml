@@ -7,6 +7,15 @@ services:
     env: java
     region: frankfurt  # ou ohio, oregon, etc.
     
+
+  - type: postgres
+    name: postgresql-rendement
+    plan: free
+    region: frankfurt
+    databaseName: recruitment_db
+    user: spring_user
+    ipAllowList: []
+    
     # Commande de build
     buildCommand: ./mvnw clean package -DskipTests  # ou ./gradlew build
     
@@ -25,7 +34,7 @@ services:
         value: production
       - key: JAVA_OPTS
         value: -Xmx512m -Xms256m -Dserver.port=$PORT
-      - key: SPRING_DATASOURCE_URL
+      - key: DATASOURCE_URL
         fromDatabase:
           name: postgresql-rendement
           property: connectionString
