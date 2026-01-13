@@ -4,7 +4,7 @@ spring:
     # URL ABSOLUE vers votre base Render - À ADAPTER !
     url: jdbc:postgresql://dpg-d5icgnh4tr6s73a3v640-a.oregon-postgres.render.com:5432/recruitment_db_0lvd
     username: mohamed
-    password: mohamed  # Remplacez par le vrai mot de passe !
+    password: postgres  
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 60000
