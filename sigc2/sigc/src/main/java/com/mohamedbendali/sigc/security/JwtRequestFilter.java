@@ -18,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter; // Important: pour s
 import java.io.IOException;
 
 @Component // Déclare comme bean Spring pour être injecté dans SecurityConfig
+@ConditionalOnBean(UserService.class)
 public class JwtRequestFilter extends OncePerRequestFilter { // Hérite de OncePerRequestFilter
 
     private static final Logger log = LoggerFactory.getLogger(JwtRequestFilter.class);
