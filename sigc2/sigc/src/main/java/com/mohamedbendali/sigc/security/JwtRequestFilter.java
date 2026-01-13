@@ -1,5 +1,9 @@
 package com.mohamedbendali.sigc.security;
 
+// Dans SecurityConfig.java et JwtRequestFilter.java
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
 import com.mohamedbendali.sigc.service.UserService; // Votre UserDetailsService
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
