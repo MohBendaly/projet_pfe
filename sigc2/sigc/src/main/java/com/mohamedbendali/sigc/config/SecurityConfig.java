@@ -1,5 +1,9 @@
 package com.mohamedbendali.sigc.config;
 
+// Dans SecurityConfig.java et JwtRequestFilter.java
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
 // ... tous les imports nécessaires ...
 import com.mohamedbendali.sigc.security.JwtAuthenticationEntryPoint; // Supposons que vous avez ceci
 import com.mohamedbendali.sigc.security.JwtRequestFilter;       // Supposons que vous avez ceci
