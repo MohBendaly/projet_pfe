@@ -1,6 +1,9 @@
 # CONFIGURATION UNIQUE pour RENDER - Pas de profils, pas d'options
 spring:
-  datasource:
+ config:
+  activate:
+   on-profile: nosec
+datasource:
     # URL ABSOLUE vers votre base Render - À ADAPTER !
     url: jdbc:postgresql://dpg-d5icgnh4tr6s73a3v640-a.oregon-postgres.render.com:5432/recruitment_db
     username: postgres
@@ -12,13 +15,24 @@ spring:
   
   jpa:
     hibernate:
-      ddl-auto: none  # DÉSACTIVEZ les opérations DDL au démarrage
-    show-sql: true
+      ddl-auto: valide
+    show-sql: false
+    
+  security:
+    basic:
+      enabled: false
+ spring:
+  config:
+    activate:
+      on-profile: production
+      
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         temp:
           use_jdbc_metadata_defaults: false
-
-# DÉSACTIVEZ la vérification de la datasource
-spring.autoconfigure.exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+    datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/recruitment_db}
+  jpa:
+    hibernate:
+      ddl-auto: validate
