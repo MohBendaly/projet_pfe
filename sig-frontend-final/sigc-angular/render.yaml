@@ -5,13 +5,13 @@ services:
   - type: web
     name: spring-pfe
     env: java
-    region: frankfurt  # ou ohio, oregon, etc
+    region: Oregon  # ou ohio, oregon, etc
     build command: ./mvnw clean package -DskipTests 
 
   - type: postgres
-    name: postgresql-rendement
+    name: postgresql-pfe
     plan: free
-    region: frankfurt
+    region: Oregon
     databaseName: recruitment_db
     user: spring_user
     ipAllowList: []
