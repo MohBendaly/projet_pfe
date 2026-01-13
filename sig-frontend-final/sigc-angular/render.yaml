@@ -5,8 +5,8 @@ services:
   - type: web
     name: spring-pfe
     env: java
-    region: frankfurt  # ou ohio, oregon, etc.
-    
+    region: frankfurt  # ou ohio, oregon, etc
+    build command: ./mvnw clean package -DskipTests 
 
   - type: postgres
     name: postgresql-rendement
