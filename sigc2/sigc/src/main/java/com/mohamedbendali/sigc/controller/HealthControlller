@@ -1,0 +1,43 @@
+package com.mohamedbendali.sigc.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+public class HealthController {
+    
+    @Autowired(required = false)
+    private DataSource dataSource;
+    
+    @Value("${spring.datasource.url:NOT_SET}")
+    private String dbUrl;
+    
+    @GetMapping("/health/db")
+    public Map<String, Object> checkDatabase() {
+        Map<String, Object> result = new HashMap<>();
+        
+        result.put("db_url_configured", dbUrl);
+        result.put("data_source_available", dataSource != null);
+        
+        if (dataSource != null) {
+            try (Connection conn = dataSource.getConnection()) {
+                result.put("connection_success", true);
+                result.put("database", conn.getCatalog());
+                result.put("schema", conn.getSchema());
+            } catch (Exception e) {
+                result.put("connection_success", false);
+                result.put("error", e.getMessage());
+            }
+        }
+        
+        return result;
+    }
+}
