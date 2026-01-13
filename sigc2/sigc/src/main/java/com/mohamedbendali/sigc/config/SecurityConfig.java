@@ -20,8 +20,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@ConditionalOnMissingProfile("nosec")
-@EnableMethodSecurity(prePostEnabled = true)
+@ConditionalOnProperty(
+    name = "spring.security.enabled", 
+    havingValue = "true", 
+    matchIfMissing = true)
 public class SecurityConfig {
 
     private final UserService userService;
