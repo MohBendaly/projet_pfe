@@ -2,7 +2,7 @@ services:
   - type: web
     name: sigc
     env: java
-    rootDir: .  # Explicitement dans le dossier actuel
+    rootDir: sigc2/sigc
     buildCommand: ./mvnw clean package -DskipTests
     startCommand: java -jar target/*.jar
     healthCheckPath: /health
