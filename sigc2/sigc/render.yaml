@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: spring-pfe
+    name: sigc
     env: java
     rootDir: .  # Explicitement dans le dossier actuel
     buildCommand: ./mvnw clean package -DskipTests
