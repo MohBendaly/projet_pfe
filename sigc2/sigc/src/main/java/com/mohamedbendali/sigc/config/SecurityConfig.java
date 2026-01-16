@@ -83,7 +83,9 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll() // Pour Swagger
                         .requestMatchers("/error").permitAll() // Autoriser l'accès à la page d'erreur
                         // --- Règles GET publiques (si nécessaire) ---
-                        .requestMatchers(HttpMethod.GET, "/api/offers", "/api/offers/*").permitAll()
+                         .requestMatchers("/health", "/health/**").permitAll()  // Pour Render Health Checks
+                         .requestMatchers("/").permitAll()               
+                         .requestMatchers(HttpMethod.GET, "/api/offers", "/api/offers/*").permitAll()
                         // --- Règles spécifiques aux rôles ---
                         // .requestMatchers("/admin/**").hasRole("ADMIN")
                         // --- Règle générale pour le reste de l'API (ou des endpoints) ---
