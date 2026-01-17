@@ -15,7 +15,7 @@ COPY src ./src
 RUN ./mvnw clean package -DskipTests -Dcheckstyle.skip=true -Djacoco.skip=true
 
 # Étape 2 : Exécution
-FROM openjdk:17-jdk-slim-bullseye
+FROM openjdk:17-slim
 WORKDIR /app
 
 # 4. Copier le JAR depuis l'étape builder
