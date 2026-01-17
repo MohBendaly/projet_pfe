@@ -18,7 +18,6 @@ RUN ./mvnw clean package -DskipTests -Dcheckstyle.skip=true -Djacoco.skip=true
 FROM openjdk:17-slim
 WORKDIR /app
 
-# 4. Copier le JAR depuis l'étape builder
 COPY --from=builder /app/target/*.jar app.jar
 
 # 5. Exposer le port et démarrer
