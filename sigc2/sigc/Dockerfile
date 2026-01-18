@@ -15,7 +15,7 @@ COPY src ./src
 RUN ./mvnw clean package -DskipTests -Dcheckstyle.skip=true -Djacoco.skip=true
 
 # Étape 2 : Exécution
-FROM openjdk:17-slim
+FROM openjdk:17.0.1-jdk-slim
 WORKDIR /app
 
 COPY --from=builder /app/target/*.jar app.jar
